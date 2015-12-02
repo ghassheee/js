@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8'>
-  <title>stop watch</title>
+  <title>STOPWATCH</title>
   <style>
     body {
       background-color: #0088ff;
@@ -42,7 +42,7 @@
 <body>
 
   <div id='display'>0.00</div>
-  <div id='start' class='btn'>START/STOP</div>
+  <div id='start' class='btn'>START</div>
   <div id='record' class='btn'>RECORD</div>
   <div id='clear' class='btn'>CLEAR</div>
 
@@ -64,11 +64,13 @@
       if(on) {
         recordms = stackms = Date.now() - startms + stackms;
         recordDisplay();
+        start.innerHTML = 'START';
         setButtonState(true,false,true);
         on = 0;
       } else {
         startms = Date.now();
         updateDisplay();
+        start.textContent = 'STOP';
         setButtonState(true,true,false);
         on = 1;
       }
