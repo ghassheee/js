@@ -5,7 +5,7 @@
   <title>stop watch</title>
   <style>
     body {
-      background-color: skyblue;
+      background-color: #0088ff;
       font-family: Arial, sans-serif;
       text-align: center;
 
@@ -18,61 +18,79 @@
       margin: 30px auto;
       text-shadow: 1px 2px 0 rgba(255,255,255, 0.5);
     }
+    .btn {
+      display: inline-block;
+      width: 100px;
+      padding: 7px;
+      background: #00aaff;
+      border-radius: 5px;
+      box-shadow: 0 4px 0 #0088cc;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn + .btn {
+      margin-left: 10px;
+    }
+    .btn.inactive{
+      opacity: 0.5;
+    }
+    .btn.active{
+      opacity: 1.0;
+    }
   </style>
 </head>
 <body>
 
   <div id='display'>0.00</div>
-  <button id='start'>START/STOP</button>
-  <button id='record'>RECORD</button>
-  <button id='clear'>CLEAR</button>
+  <div id='start' class='btn'>START/STOP</div>
+  <div id='record' class='btn'>RECORD</div>
+  <div id='clear' class='btn'>CLEAR</div>
 
   <script>
   (function(){
     "use strict"
 
     var on = 0;
-    var startms =0;
-    var recordms　=0;
-    var stackms =0;
-
+    var startms =0, recordms　=0 ,stackms =0;
     var tid;
-
     var start=document.getElementById('start');
     var record=document.getElementById('record');
     var clear=document.getElementById('clear');
     var display=document.getElementById('display');
 
 
+    setButtonState(true, false, false);
     start.addEventListener('click',function(){
       if(on) {
-        stackms = Date.now() - startms + stackms;
-        recordms = stackms;
+        recordms = stackms = Date.now() - startms + stackms;
         recordDisplay();
+        setButtonState(true,false,true);
         on = 0;
       } else {
         startms = Date.now();
         updateDisplay();
+        setButtonState(true,true,false);
         on = 1;
       }
     });
     record.addEventListener('click',function(){
-      if (on) {
-        recordms = Date.now() - startms + stackms;
-        recordDisplay();
-        on = 1;
-      }
+      if (!on) return;
+      recordms = Date.now() - startms + stackms;
+      recordDisplay();
     });
     clear.addEventListener('click',function(){
-      if (on) ; else{
-        on = 0;
-        startms =0;
-        recordms　=0;
-        stackms =0;
-        recordDisplay();
-      }
+      if (on) return;
+      on = 0;
+      startms =  recordms　= stackms =0;
+      recordDisplay();
+      setButtonState(true,false,false);
     });
 
+    function setButtonState(s,r,c){
+      start.className = s ? 'btn active' : 'btn inactive';
+      record.className = r ? 'btn active' : 'btn inactive';
+      clear.className = c ? 'btn active' : 'btn inactive';
+    }
     function updateDisplay(){
       tid = setTimeout(function(){
         var t = Date.now() - startms + recordms ;
@@ -86,13 +104,6 @@
     }
 
 
-    record.addEventListener('click',function(){
-      if (on) {
-        recordms = Date.now() - startms + stackms;
-        recordDisplay();
-        on = 1;
-      }
-    });
 
   })();
 
